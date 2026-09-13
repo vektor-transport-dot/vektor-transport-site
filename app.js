@@ -127,12 +127,6 @@
         setTimeout(function () { el.classList.add("is-in"); }, i * 90);
       });
     }
-    function hideKicker() {
-      if (!kickerShown) return;
-      kickerShown = false;
-      kicker.classList.remove("is-visible");
-      kickerLetters.forEach(function (el) { el.classList.remove("is-in"); });
-    }
 
     function onScroll() {
       var y = window.scrollY || window.pageYOffset;
@@ -140,10 +134,10 @@
       if (sticky) sticky.classList.toggle("is-visible", y > heroH * 0.7);
       if (toTop) toTop.classList.toggle("is-visible", y > 600);
       if (fab) fab.classList.toggle("is-hidden", y < heroH * 0.6);
-      if (kicker) { if (y > 24) showKicker(); else hideKicker(); }
     }
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
+    if (kicker) setTimeout(showKicker, 200);
 
     if (toTop) {
       toTop.addEventListener("click", function () {
