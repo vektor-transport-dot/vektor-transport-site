@@ -1,7 +1,7 @@
 window.I18N = {
   de: {
     nav_services: "Leistungen", nav_why: "Warum wir", nav_fleet: "Fuhrpark", nav_gallery: "Galerie",
-    nav_reviews: "Bewertungen", nav_faq: "FAQ", nav_contact: "Kontakt", cta_request: "Rückruf anfordern",
+    nav_reviews: "Bewertungen", nav_faq: "FAQ", nav_contact: "Kontakt", cta_request: "Angebot anfordern",
     kicker_sub: "Umzüge & Transporte in Deutschland",
     hero_title: "Exklusiver Premium-Partner<br>für <em>Umzüge und Transporte</em>.",
     hero_sub: "Komfort, Sicherheit und höchste Qualität.",
@@ -50,7 +50,7 @@ window.I18N = {
   },
   ru: {
     nav_services: "Услуги", nav_why: "Почему мы", nav_fleet: "Автопарк", nav_gallery: "Галерея",
-    nav_reviews: "Отзывы", nav_faq: "Вопросы", nav_contact: "Контакты", cta_request: "Заказать звонок",
+    nav_reviews: "Отзывы", nav_faq: "Вопросы", nav_contact: "Контакты", cta_request: "Запросить предложение",
     kicker_sub: "Переезды и перевозки по Германии",
     hero_title: "Эксклюзивный премиум-партнёр<br>по <em>переездам и перевозкам</em>.",
     hero_sub: "Комфорт, безопасность и высочайшее качество.",
@@ -99,7 +99,7 @@ window.I18N = {
   },
   en: {
     nav_services: "Services", nav_why: "Why us", nav_fleet: "Fleet", nav_gallery: "Gallery",
-    nav_reviews: "Reviews", nav_faq: "FAQ", nav_contact: "Contact", cta_request: "Request a callback",
+    nav_reviews: "Reviews", nav_faq: "FAQ", nav_contact: "Contact", cta_request: "Request a quote",
     kicker_sub: "Moving & transport across Germany",
     hero_title: "Exclusive premium partner<br>for <em>moving & transport</em>.",
     hero_sub: "Comfort, safety and top quality.",
@@ -148,7 +148,7 @@ window.I18N = {
   },
   uk: {
     nav_services: "Послуги", nav_why: "Чому ми", nav_fleet: "Автопарк", nav_gallery: "Галерея",
-    nav_reviews: "Відгуки", nav_faq: "Питання", nav_contact: "Контакти", cta_request: "Замовити дзвінок",
+    nav_reviews: "Відгуки", nav_faq: "Питання", nav_contact: "Контакти", cta_request: "Запросити пропозицію",
     kicker_sub: "Переїзди та перевезення по Німеччині",
     hero_title: "Ексклюзивний преміум-партнер<br>з <em>переїздів і перевезень</em>.",
     hero_sub: "Комфорт, безпека та найвища якість.",
