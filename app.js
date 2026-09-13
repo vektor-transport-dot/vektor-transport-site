@@ -4,9 +4,10 @@
   // ---------- i18n ----------
   var LANG_KEY = "vt_lang";
   function applyLang(lang) {
-    var dict = window.I18N[lang] || window.I18N.de;
+    var dict = (window.I18N && (window.I18N[lang] || window.I18N.de)) || {};
     document.documentElement.lang = lang;
-    document.getElementById("lang-cur").textContent = lang.toUpperCase();
+    var cur = document.getElementById("lang-cur");
+    if (cur) cur.textContent = lang.toUpperCase();
     document.querySelectorAll("[data-i18n]").forEach(function (el) {
       var key = el.getAttribute("data-i18n");
       if (dict[key] != null) el.textContent = dict[key];
@@ -29,6 +30,7 @@
 
     var btn = document.getElementById("lang-btn");
     var menu = document.getElementById("lang-menu");
+    if (!btn || !menu) return;
     btn.addEventListener("click", function () {
       var open = !menu.classList.contains("is-hidden");
       menu.classList.toggle("is-hidden");
