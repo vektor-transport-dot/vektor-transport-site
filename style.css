@@ -129,7 +129,11 @@ img { max-width: 100%; display: block; }
 .cta:hover { background: rgba(124,157,181,.3); border-color: rgba(124,157,181,.8); }
 .cta--block { width: 100%; text-align: center; }
 .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; }
-.cta--call, .cta--wa, .cta--tg { display: inline-flex; align-items: center; gap: 9px; }
+.cta--call, .cta--wa, .cta--tg, .cta--mail { display: inline-flex; align-items: center; gap: 9px; }
+.req-send { margin: 4px 0 6px; }
+.req-send__label { display: block; color: var(--muted); font-size: 13.5px; margin-bottom: 10px; }
+.req-send__row { display: flex; flex-wrap: wrap; gap: 10px; }
+.req-send__row .cta { flex: 1 1 150px; justify-content: center; }
 .trust { margin-top: 22px; }
 .trust-rate { display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 14px; color: var(--muted); }
 .star { color: var(--gold); }

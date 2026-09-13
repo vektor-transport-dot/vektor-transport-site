@@ -180,16 +180,8 @@
     var form = document.getElementById("req-form");
     var done = document.getElementById("req-done");
     var err = document.getElementById("req-error");
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var data = new FormData(form);
-      if (!data.get("name") || !data.get("phone") || !data.get("service")) {
-        err.textContent = "Bitte füllen Sie Name, Telefon und Art des Umzugs aus.";
-        err.classList.remove("is-hidden");
-        return;
-      }
-      err.classList.add("is-hidden");
 
+    function buildLines(data) {
       var extras = data.getAll("extras");
       var lines = [
         "Name: " + data.get("name"),
@@ -212,15 +204,40 @@
       if (data.get("to")) lines.push("Einzugsadresse: " + data.get("to"));
       if (data.get("date")) lines.push("Wunschtermin: " + data.get("date"));
       if (data.get("comment")) lines.push("Weitere Details: " + data.get("comment"));
+      return lines;
+    }
 
-      var subject = "Umzugsanfrage – " + data.get("name");
-      var mailto = "mailto:info@vektor-transport.de" +
-        "?subject=" + encodeURIComponent(subject) +
-        "&body=" + encodeURIComponent(lines.join("\n"));
+    document.querySelectorAll("#req-form [data-channel]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var data = new FormData(form);
+        if (!data.get("name") || !data.get("phone") || !data.get("service")) {
+          err.textContent = "Bitte füllen Sie Name, Telefon und Art des Umzugs aus.";
+          err.classList.remove("is-hidden");
+          return;
+        }
+        err.classList.add("is-hidden");
 
-      form.classList.add("is-hidden");
-      done.classList.remove("is-hidden");
-      window.location.href = mailto;
+        var lines = buildLines(data);
+        var text = lines.join("\n");
+        var channel = btn.getAttribute("data-channel");
+        var url;
+        if (channel === "whatsapp") {
+          url = "https://wa.me/4915751017172?text=" + encodeURIComponent("Umzugsanfrage:\n" + text);
+        } else if (channel === "telegram") {
+          url = "https://t.me/VektorTransport?text=" + encodeURIComponent("Umzugsanfrage:\n" + text);
+        } else {
+          var subject = "Umzugsanfrage – " + data.get("name");
+          url = "mailto:info@vektor-transport.de?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(text);
+        }
+
+        form.classList.add("is-hidden");
+        done.classList.remove("is-hidden");
+        if (channel === "email") {
+          window.location.href = url;
+        } else {
+          window.open(url, "_blank", "noopener");
+        }
+      });
     });
   }
 

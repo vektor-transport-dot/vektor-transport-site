@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=35" />
+  <link rel="stylesheet" href="style.css?v=36" />
   <script type="application/ld+json">
   {"@context":"https://schema.org","@graph":[
     {"@type":"MovingCompany","@id":"https://vektor-transport.de/#business","name":"Vektor Transport","telephone":"+49 157 510 171 72","priceRange":"€€","currenciesAccepted":"EUR","paymentAccepted":"Bar, Karte, Überweisung","areaServed":"DE","address":{"@type":"PostalAddress","addressCountry":"DE"},"sameAs":["https://wa.me/4915751017172","https://t.me/VektorTransport"],"makesOffer":[
@@ -405,7 +405,23 @@
         </div>
         <input class="field" type="date" name="date" />
         <textarea class="field" name="comment" rows="2" placeholder="Weitere Details (optional)" data-i18n-ph="ph_comment"></textarea>
-        <button type="submit" class="cta cta--block" data-i18n="submit">Anfrage senden</button>
+        <div class="req-send">
+          <span class="req-send__label" data-i18n="send_via">Anfrage senden über:</span>
+          <div class="req-send__row">
+            <button type="button" class="cta cta--wa" data-channel="whatsapp">
+              <svg viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5z"/><path fill="#fff" d="M23 19.2c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+              <span>WhatsApp</span>
+            </button>
+            <button type="button" class="cta cta--tg" data-channel="telegram">
+              <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-2 1.93c-.23.23-.42.42-.83.42z"/></svg>
+              <span>Telegram</span>
+            </button>
+            <button type="button" class="cta cta--mail" data-channel="email">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+              <span data-i18n="cta_email">E-Mail</span>
+            </button>
+          </div>
+        </div>
         <p class="err is-hidden" id="req-error"></p>
         <p class="reassure reassure--info">
           <svg class="note__ic" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
@@ -493,7 +509,7 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=11"></script>
-  <script src="app.js?v=17"></script>
+  <script src="i18n.js?v=12"></script>
+  <script src="app.js?v=18"></script>
 </body>
 </html>
