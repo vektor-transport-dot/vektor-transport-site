@@ -296,7 +296,7 @@ img { max-width: 100%; display: block; }
 
 /* Footer */
 .foot {
-  max-width: var(--maxw); margin: 0 auto; padding: 40px 22px 120px; display: flex; flex-wrap: wrap; gap: 14px;
+  max-width: var(--maxw); margin: 0 auto; padding: 40px 22px 180px; display: flex; flex-wrap: wrap; gap: 14px;
   color: var(--muted); font-size: 13px; border-top: 1px solid var(--line);
 }
 .foot__b { color: var(--text); font-weight: 800; }
@@ -316,11 +316,11 @@ img { max-width: 100%; display: block; }
 }
 .to-top.is-visible { opacity: 1; pointer-events: auto; }
 
-.fab { position: fixed; left: 16px; bottom: 16px; z-index: 46; display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 10px; }
+.fab { position: fixed; left: 16px; bottom: 16px; z-index: 46; display: flex; flex-direction: column-reverse; align-items: flex-start; gap: 10px; pointer-events: none; }
 .fab__btn {
   width: 54px; height: 54px; border-radius: 50%; background: var(--accent); color: var(--accent-ink);
   border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 12px 30px rgba(0,0,0,.4);
-  position: relative;
+  position: relative; pointer-events: auto;
 }
 .fab__ico-close { position: absolute; opacity: 0; }
 .fab.is-open .fab__ico-chat { opacity: 0; }
