@@ -83,6 +83,11 @@ img { max-width: 100%; display: block; }
   background: none; border-left: none; border-right: none; border-top: none; text-align: left;
 }
 .nav a.nav__cta { margin-top: 16px; background: var(--accent); color: var(--accent-ink); text-align: center; border-radius: 12px; padding: 15px; border-bottom: none !important; }
+.nav a.nav__taxi {
+  display: flex; align-items: center; gap: 8px; color: var(--accent);
+  border: 1px solid rgba(124,157,181,.4); border-radius: 10px; background: rgba(124,157,181,.1);
+}
+.nav a.nav__taxi svg { flex: 0 0 auto; }
 
 /* Hero */
 .hero { position: relative; padding: 130px 22px 70px; overflow: hidden; }
@@ -384,6 +389,7 @@ img { max-width: 100%; display: block; }
     gap: 18px; padding: 0; background: none; border-bottom: none; flex-wrap: wrap; }
   .nav a, .nav .nav__link { border-bottom: none; padding: 6px 2px; font-size: 13.5px; white-space: nowrap; }
   .nav a.nav__cta { margin-top: 0; padding: 10px 20px; }
+  .nav a.nav__taxi { padding: 6px 12px; border: 1px solid rgba(124,157,181,.4); background: rgba(124,157,181,.1); }
   .burger { display: none; }
   .sticky-cta { display: none; }
 }
