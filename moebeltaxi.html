@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MöbelTaxi Wuppertal | Sofortiger Möbeltransport mit Preisrechner – Vektor Transport</title>
+  <meta name="description" content="MöbelTaxi von Vektor Transport: Adresse eingeben, Preis sofort sehen, direkt buchen. Schneller Möbeltransport in Wuppertal und Umgebung – ideal für IKEA-Einkäufe & Co." />
+  <link rel="canonical" href="https://vektor-transport.de/moebeltaxi.html" />
+  <meta name="theme-color" content="#1c1b1f" />
+  <link rel="icon" type="image/png" href="media/logo.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Vektor Transport" />
+  <meta property="og:title" content="MöbelTaxi – sofortiger Möbeltransport mit Preisrechner" />
+  <meta property="og:description" content="Adresse eingeben, Preis sofort sehen, direkt buchen. Möbeltransport in Wuppertal und Umgebung, wie ein Taxi." />
+  <meta property="og:locale" content="de_DE" />
+  <meta property="og:image" content="media/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css?v=41" />
+</head>
+<body>
+
+<header class="hdr" id="hdr">
+    <a href="index.html#top" class="logo"><img class="logo__img" src="media/logo.png" alt="Vektor Transport" width="40" height="40" /><span>Vektor Transport</span></a>
+    <nav class="nav" id="nav">
+      <a href="#rechner">Preisrechner</a>
+      <a href="#ablauf">So geht's</a>
+      <a href="#preise">Preise</a>
+      <a href="#faq">FAQ</a>
+      <a href="#kontakt">Kontakt</a>
+      <a href="index.html#anfrage" class="nav__cta">Umzug anfragen</a>
+    </nav>
+    <div class="hdr__right">
+      <a class="hdr__call" href="tel:+4915751017172" aria-label="Anrufen">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      </a>
+      <button class="burger" id="burger" aria-label="Menü" aria-expanded="false"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <div class="hero__grid">
+        <div class="hero__text">
+          <span class="kicker">
+            <b class="kicker__title">
+              <span class="kicker__word" id="kicker-vektor"><span class="kl">M</span><span class="kl">ö</span><span class="kl">b</span><span class="kl">e</span><span class="kl">l</span></span>
+              <span class="kicker__rest">Taxi</span>
+            </b>
+          </span>
+          <h1 class="hero__h">Möbeltransport <em>in Minuten</em> statt in Tagen.</h1>
+          <p class="hero__p">Gerade bei IKEA & Co. gekauft und keine Lust auf tagelange Lieferzeit? Adresse eingeben, Preis sofort sehen, direkt buchen – wie ein Taxi, nur für Möbel.</p>
+          <div class="hero__ctas">
+            <a href="#rechner" class="cta cta--wa">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg>
+              <span>Preis berechnen</span>
+            </a>
+          </div>
+          <div class="trust">
+            <a href="index.html#bewertungen" class="trust-rate js-go"><span class="star">★</span> <b>5,0</b> · <span>Kundenbewertungen</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec reveal" id="rechner">
+      <span class="eyebrow">Preisrechner</span>
+      <h2 class="h2">Was kostet Ihr Transport?</h2>
+      <p class="section-lead">Abholadresse und Zieladresse eingeben, Paketgröße wählen – der Preis wird sofort berechnet.</p>
+
+      <div class="taxi-calc">
+        <label class="calc-label" for="taxi-from">Abholadresse</label>
+        <input class="field" type="text" id="taxi-from" placeholder="z. B. Schmiedestraße 81, 42279 Wuppertal (IKEA)" autocomplete="off" />
+
+        <label class="calc-label" for="taxi-to">Zieladresse</label>
+        <input class="field" type="text" id="taxi-to" placeholder="z. B. Musterstraße 1, Wuppertal" autocomplete="off" />
+
+        <div class="calc-map" id="taxi-map">
+          <div class="route-van" id="taxi-van">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8a1 1 0 0 1 1-1h9l4 4v5"/><path d="M3 16h14"/><circle cx="7" cy="17" r="1.6"/><circle cx="16" cy="17" r="1.6"/></svg>
+          </div>
+        </div>
+
+        <label class="calc-label">Was möchten Sie transportieren?</label>
+        <div class="pkg-grid" id="pkg-grid">
+          <button type="button" class="pkg-card" data-pkg="S" data-fee="0">
+            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v13M23 4v13M9 17h14M9 30l1-13M23 30l-1-13"/></svg>
+            <div class="pkg-card__t">S</div>
+            <div class="pkg-card__d">Kommode, Stuhl, Kartons</div>
+          </button>
+          <button type="button" class="pkg-card" data-pkg="M" data-fee="0">
+            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="24" height="10" rx="2"/><path d="M4 24v4M28 24v4M4 18h24"/><rect x="7" y="9" width="8" height="5" rx="1"/></svg>
+            <div class="pkg-card__t">M</div>
+            <div class="pkg-card__d">Bett, kleiner Schrank, Sofa (2-Sitzer)</div>
+          </button>
+          <button type="button" class="pkg-card" data-pkg="L" data-fee="15">
+            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="20" height="26" rx="1"/><path d="M16 3v26"/></svg>
+            <div class="pkg-card__t">L</div>
+            <div class="pkg-card__d">Kleiderschrank, großes Sofa, Doppelbett</div>
+          </button>
+          <button type="button" class="pkg-card" data-pkg="XL" data-fee="30">
+            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="18" height="26" rx="2"/><path d="M7 12h18M11 5v5M11 15v5"/></svg>
+            <div class="pkg-card__t">XL</div>
+            <div class="pkg-card__d">Küche, Kühlschrank, Waschmaschine</div>
+          </button>
+        </div>
+
+        <a href="#" id="taxi-calc-btn" class="cta cta--block" style="margin-top:22px;">Preis berechnen</a>
+        <p class="err is-hidden" id="taxi-error"></p>
+
+        <div class="price-box" id="price-box">
+          <p class="price-box__placeholder">Adressen eingeben und Paket wählen, um den Preis zu sehen.</p>
+        </div>
+
+        <div id="taxi-book" class="is-hidden">
+          <label class="calc-label" for="taxi-name">Name</label>
+          <input class="field" type="text" id="taxi-name" placeholder="Ihr Name" autocomplete="name" />
+          <label class="calc-label" for="taxi-phone">Telefonnummer</label>
+          <input class="field" type="tel" id="taxi-phone" placeholder="Für die Rückmeldung" autocomplete="tel" />
+
+          <div class="req-send" style="margin-top:18px;">
+            <span class="req-send__label">Jetzt buchen über:</span>
+            <div class="req-send__row">
+              <button type="button" class="cta cta--wa" data-taxi-channel="whatsapp">
+                <svg viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5z"/><path fill="#fff" d="M23 19.2c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+                <span>WhatsApp</span>
+              </button>
+              <button type="button" class="cta cta--tg" data-taxi-channel="telegram">
+                <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-2 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                <span>Telegram</span>
+              </button>
+              <button type="button" class="cta cta--mail" data-taxi-channel="email">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+                <span>E-Mail</span>
+              </button>
+            </div>
+          </div>
+          <p class="err is-hidden" id="taxi-book-error"></p>
+        </div>
+
+        <div class="done is-hidden" id="taxi-done">
+          <div class="done__ring"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
+          <h3>Anfrage vorbereitet!</h3>
+          <p>Senden Sie die vorausgefüllte Nachricht ab, um Ihre Buchung zu bestätigen. Ein Mitarbeiter meldet sich so schnell wie möglich mit einem konkreten Zeitrahmen. Sie können der Nachricht optional ein Foto Ihres Kassenbons beifügen.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec reveal" id="ablauf">
+      <span class="eyebrow">So funktioniert's</span>
+      <h2 class="h2">In drei Schritten zum Transport</h2>
+      <div class="taxi-steps">
+        <div class="taxi-step">
+          <div class="taxi-step__num">01</div>
+          <div class="taxi-step__t">Route &amp; Paket wählen</div>
+          <div class="taxi-step__d">Abholadresse, Zieladresse und Größe eingeben – der Preis erscheint sofort.</div>
+        </div>
+        <div class="taxi-step">
+          <div class="taxi-step__num">02</div>
+          <div class="taxi-step__t">Buchen</div>
+          <div class="taxi-step__d">Name und Telefonnummer angeben und die Anfrage per WhatsApp, Telegram oder E-Mail senden.</div>
+        </div>
+        <div class="taxi-step">
+          <div class="taxi-step__num">03</div>
+          <div class="taxi-step__t">Rundum-Service</div>
+          <div class="taxi-step__d">Unser Team zu zweit übernimmt Beladen, Transport, Entladen und trägt bis in die gewünschte Etage. Sie müssen nicht mit anpacken.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="sec reveal" id="preise">
+      <span class="eyebrow">Preise</span>
+      <h2 class="h2">Transparent &amp; nachvollziehbar</h2>
+      <p class="section-lead">Startpreis plus Kilometerpreis – wie beim Taxi. Keine versteckten Kosten.</p>
+      <table class="price-table">
+        <tr><th>Startpreis</th><td>59 €</td></tr>
+        <tr><th>Pro Kilometer</th><td>1,50 €</td></tr>
+        <tr><th>Paket S / M</th><td>keine Aufpreis</td></tr>
+        <tr><th>Paket L</th><td>+ 15 €</td></tr>
+        <tr><th>Paket XL</th><td>+ 30 €</td></tr>
+      </table>
+      <p class="note note--info" style="margin-top:20px;">
+        <svg class="note__ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
+        <span>Bezahlung vor Ort bequem per Karte (Kartenterminal) oder bar.</span>
+      </p>
+    </section>
+
+    <section class="sec reveal" id="faq">
+      <span class="eyebrow">Fragen</span>
+      <h2 class="h2">Häufig gestellte Fragen zum MöbelTaxi</h2>
+      <div class="faq-list" id="faq-list">
+        <div class="faq-item"><div class="faq-q"><span>Muss ich beim Tragen mithelfen?</span></div><div class="faq-a"><p>Nein. Unser Team ist zu zweit vor Ort, übernimmt Beladen, Transport und Entladen und trägt Ihr Möbelstück bis in die gewünschte Etage.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Was, wenn mein Möbelstück nicht in die vorgeschlagene Größe passt?</span></div><div class="faq-a"><p>Kein Problem – schreiben Sie uns kurz dazu, was es genau ist. Wir bestätigen die passende Paketgröße, bevor der Transport losgeht.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Wie schnell wird meine Anfrage bestätigt?</span></div><div class="faq-a"><p>Ein Mitarbeiter bestätigt Ihre Anfrage so schnell wie möglich und nennt Ihnen einen konkreten Zeitrahmen.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Wie bezahle ich?</span></div><div class="faq-a"><p>Direkt vor Ort beim Fahrer – per Karte (Kartenterminal) oder bar.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Gilt das MöbelTaxi nur in Wuppertal?</span></div><div class="faq-a"><p>Der Preisrechner funktioniert für jede Adresse – wir sind aus Wuppertal aus regelmäßig auch in Düsseldorf, Köln und der weiteren Umgebung unterwegs.</p></div></div>
+      </div>
+    </section>
+
+    <section class="sec reveal" id="kontakt">
+      <span class="eyebrow">Kontakt</span>
+      <h2 class="h2">Fragen zum MöbelTaxi?</h2>
+      <div class="contact-block">
+        <a href="tel:+4915751017172">+49 157 510 171 72</a>
+        <a href="mailto:info@vektor-transport.de">info@vektor-transport.de</a>
+      </div>
+      <div class="loc-actions">
+        <a class="btn-ghost" href="tel:+4915751017172">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <span>Anrufen</span>
+        </a>
+        <a class="btn-ghost" href="https://wa.me/4915751017172" target="_blank" rel="noopener">
+          <svg viewBox="0 0 32 32" width="17" height="17" fill="currentColor"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.7 1.2 1.3-4.6-.3-.5a12.7 12.7 0 0 1-2-6.8C3.2 8.9 8.9 3.2 16 3.2S28.8 8.9 28.8 16 23.1 28.8 16 28.8zm7-9.6c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+          <span>WhatsApp</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <span class="foot__b">Vektor Transport</span> · MöbelTaxi – ein Service von Vektor Transport, Wuppertal
+    <a href="tel:+4915751017172">+49 157 510 171 72</a>
+    <a href="mailto:info@vektor-transport.de">info@vektor-transport.de</a>
+    <a href="index.html#top">Zur Hauptseite</a>
+    <a href="impressum.html">Impressum</a>
+  </footer>
+
+  <button class="to-top" id="to-top" aria-label="Nach oben">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>
+  </button>
+
+  <div class="fab" id="fab">
+    <div class="fab__menu" id="fab-menu">
+      <a class="fab__opt fab__opt--call" href="tel:+4915751017172">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>Anrufen</span>
+      </a>
+      <a class="fab__opt fab__opt--wa" target="_blank" rel="noopener" href="https://wa.me/4915751017172">
+        <svg viewBox="0 0 32 32" width="18" height="18" fill="currentColor"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.7 1.2 1.3-4.6-.3-.5a12.7 12.7 0 0 1-2-6.8C3.2 8.9 8.9 3.2 16 3.2S28.8 8.9 28.8 16 23.1 28.8 16 28.8zm7-9.6c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+        <span>Nachricht schreiben</span>
+      </a>
+      <a class="fab__opt fab__opt--tg" target="_blank" rel="noopener" href="https://t.me/VektorTransport">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-2 1.93c-.23.23-.42.42-.83.42z"/></svg>
+        <span>Telegram</span>
+      </a>
+    </div>
+    <button class="fab__btn" id="fab-btn" aria-label="Kontakt" aria-expanded="false">
+      <svg class="fab__ico-chat" viewBox="0 0 32 32" width="30" height="30" fill="currentColor"><path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zm0 28.3c-2.5 0-4.8-.7-6.8-1.8l-.5-.3-4.7 1.2 1.3-4.6-.3-.5a12.7 12.7 0 0 1-2-6.8C3.2 8.9 8.9 3.2 16 3.2S28.8 8.9 28.8 16 23.1 28.8 16 28.8zm7-9.6c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+      <svg class="fab__ico-close" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+  </div>
+
+  <div class="cookie is-hidden" id="cookie" role="dialog" aria-live="polite">
+    <p class="cookie__txt">Wir verwenden Cookies für Analyse und Komfort. Sie können diese akzeptieren oder ablehnen.</p>
+    <div class="cookie__row">
+      <div class="cookie__btns">
+        <button class="cookie__btn cookie__btn--no" id="cookie-no">Ablehnen</button>
+        <button class="cookie__btn cookie__btn--yes" id="cookie-yes">Akzeptieren</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js?v=19"></script>
+  <script src="moebeltaxi.js?v=1"></script>
+</body>
+</html>

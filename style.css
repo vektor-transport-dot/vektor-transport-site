@@ -387,3 +387,55 @@ img { max-width: 100%; display: block; }
   .burger { display: none; }
   .sticky-cta { display: none; }
 }
+
+/* MöbelTaxi calculator */
+.taxi-calc {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 28px; margin-top: 8px;
+}
+.calc-label { display: block; font-size: 12.5px; font-weight: 700; color: var(--muted); margin: 18px 0 8px; text-transform: uppercase; letter-spacing: .04em; }
+.calc-label:first-child { margin-top: 0; }
+.calc-map {
+  width: 100%; height: 280px; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line);
+  background: var(--card-2); position: relative; margin-top: 8px;
+}
+.calc-map .leaflet-container { background: var(--card-2); font-family: inherit; }
+.route-van {
+  position: absolute; width: 30px; height: 30px; border-radius: 50%; background: var(--accent); color: var(--accent-ink);
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 16px rgba(0,0,0,.5); z-index: 500;
+  opacity: 0; transition: left 1.6s linear, top 1.6s linear, opacity .3s ease; pointer-events: none;
+}
+.calc-map__hint { padding: 14px 16px; color: var(--muted); font-size: 13px; text-align: center; }
+
+.pkg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; }
+.pkg-card {
+  background: var(--card-2); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 10px;
+  text-align: center; cursor: pointer; transition: border-color .2s ease, background .2s ease; color: var(--text);
+}
+.pkg-card svg { margin: 0 auto 8px; display: block; color: var(--muted); transition: color .2s ease; }
+.pkg-card__t { font-weight: 800; font-size: 14px; }
+.pkg-card__d { color: var(--muted); font-size: 11px; line-height: 1.4; margin-top: 3px; }
+.pkg-card:hover { border-color: rgba(124,157,181,.5); }
+.pkg-card.is-active { border-color: var(--accent); background: rgba(124,157,181,.12); }
+.pkg-card.is-active svg { color: var(--accent); }
+
+.price-box { margin-top: 22px; padding: 20px; border-radius: var(--r); background: var(--card-2); border: 1px solid var(--line); }
+.price-box__amount { font-size: 38px; font-weight: 800; letter-spacing: -.02em; }
+.price-box__amount span { font-size: 18px; font-weight: 700; color: var(--muted); }
+.price-box__breakdown { color: var(--muted); font-size: 12.5px; margin-top: 6px; line-height: 1.6; }
+.price-box__placeholder { color: var(--muted); font-size: 14px; }
+
+.taxi-steps { display: flex; flex-direction: column; border-top: 1px solid var(--line); margin-top: 8px; }
+.taxi-step { display: grid; grid-template-columns: 40px 1fr; gap: 4px 18px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.taxi-step__num { color: var(--accent); font-weight: 900; font-size: 15px; }
+.taxi-step__t { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.taxi-step__d { color: var(--muted); font-size: 13.5px; line-height: 1.55; grid-column: 2; }
+
+.price-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13.5px; }
+.price-table th, .price-table td { text-align: left; padding: 12px 10px; border-bottom: 1px solid var(--line); }
+.price-table th { color: var(--muted); font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
+
+@media (max-width: 760px) {
+  .pkg-grid { grid-template-columns: repeat(2, 1fr); }
+  .price-box__amount { font-size: 30px; }
+}
