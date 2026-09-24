@@ -407,7 +407,7 @@ img { max-width: 100%; display: block; }
 }
 .calc-map__hint { padding: 14px 16px; color: var(--muted); font-size: 13px; text-align: center; }
 
-.pkg-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 8px; }
+.pkg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 8px; }
 .pkg-card {
   background: var(--card-2); border: 1px solid var(--line); border-radius: var(--r); padding: 14px 10px;
   text-align: center; cursor: pointer; transition: border-color .2s ease, background .2s ease; color: var(--text);
@@ -436,6 +436,11 @@ img { max-width: 100%; display: block; }
 .price-table th { color: var(--muted); font-weight: 700; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; }
 
 @media (max-width: 760px) {
-  .pkg-grid { grid-template-columns: repeat(2, 1fr); }
   .price-box__amount { font-size: 30px; }
+}
+@media (max-width: 420px) {
+  .pkg-grid { grid-template-columns: repeat(1, 1fr); }
+  .pkg-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; }
+  .pkg-card svg { margin: 0; flex: 0 0 auto; }
+  .pkg-card__t { font-size: 15px; }
 }

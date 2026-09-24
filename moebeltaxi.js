@@ -1,13 +1,12 @@
 (function () {
   "use strict";
 
-  var BASE_PRICE = 59;
-  var PRICE_PER_KM = 1.5;
   var ROAD_FACTOR = 1.3; // straight-line distance -> rough road-distance estimate
   var WUPPERTAL = { lat: 51.2562, lon: 7.1508 };
 
   var selectedPkg = null;
-  var selectedFee = 0;
+  var selectedBase = 0;
+  var selectedPerKm = 0;
   var lastResult = null; // { distanceKm, price, from, to }
 
   var map, fromMarker, toMarker, routeLine, van;
@@ -95,13 +94,12 @@
       bookBox.classList.add("is-hidden");
       return;
     }
-    var kmCost = lastResult.distanceKm * PRICE_PER_KM;
-    var total = BASE_PRICE + kmCost + selectedFee;
+    var kmCost = lastResult.distanceKm * selectedPerKm;
+    var total = selectedBase + kmCost;
     box.innerHTML =
       '<div class="price-box__amount">' + total.toFixed(0) + ' € <span>ca.</span></div>' +
       '<div class="price-box__breakdown">' +
-        'Strecke: ca. ' + lastResult.distanceKm.toFixed(1) + ' km &middot; Startpreis 59 € + ' + kmCost.toFixed(2) + ' € Kilometerpreis' +
-        (selectedFee ? ' + ' + selectedFee + ' € Paket ' + selectedPkg : '') +
+        'Paket ' + selectedPkg + ' &middot; Strecke: ca. ' + lastResult.distanceKm.toFixed(1) + ' km &middot; Startpreis ' + selectedBase + ' € + ' + kmCost.toFixed(2) + ' € Kilometerpreis (' + selectedPerKm.toFixed(2) + ' €/km)' +
       '</div>';
     bookBox.classList.remove("is-hidden");
   }
@@ -113,7 +111,8 @@
         cards.forEach(function (c) { c.classList.remove("is-active"); });
         card.classList.add("is-active");
         selectedPkg = card.getAttribute("data-pkg");
-        selectedFee = parseInt(card.getAttribute("data-fee"), 10) || 0;
+        selectedBase = parseFloat(card.getAttribute("data-base")) || 0;
+        selectedPerKm = parseFloat(card.getAttribute("data-perkm")) || 0;
         updatePriceBox();
       });
     });
@@ -183,8 +182,8 @@
           return;
         }
 
-        var kmCost = lastResult.distanceKm * PRICE_PER_KM;
-        var total = BASE_PRICE + kmCost + selectedFee;
+        var kmCost = lastResult.distanceKm * selectedPerKm;
+        var total = selectedBase + kmCost;
         var lines = [
           "MöbelTaxi-Anfrage:",
           "Name: " + name,

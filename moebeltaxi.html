@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=41" />
+  <link rel="stylesheet" href="style.css?v=42" />
 </head>
 <body>
 
@@ -85,24 +85,19 @@
 
         <label class="calc-label">Was möchten Sie transportieren?</label>
         <div class="pkg-grid" id="pkg-grid">
-          <button type="button" class="pkg-card" data-pkg="S" data-fee="0">
+          <button type="button" class="pkg-card" data-pkg="Basic" data-base="59" data-perkm="1.30">
             <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v13M23 4v13M9 17h14M9 30l1-13M23 30l-1-13"/></svg>
-            <div class="pkg-card__t">S</div>
+            <div class="pkg-card__t">Basic</div>
             <div class="pkg-card__d">Kommode, Stuhl, Kartons</div>
           </button>
-          <button type="button" class="pkg-card" data-pkg="M" data-fee="0">
+          <button type="button" class="pkg-card" data-pkg="Komfort" data-base="69" data-perkm="1.50">
             <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="24" height="10" rx="2"/><path d="M4 24v4M28 24v4M4 18h24"/><rect x="7" y="9" width="8" height="5" rx="1"/></svg>
-            <div class="pkg-card__t">M</div>
-            <div class="pkg-card__d">Bett, kleiner Schrank, Sofa (2-Sitzer)</div>
+            <div class="pkg-card__t">Komfort</div>
+            <div class="pkg-card__d">Bett, Schrank, Sofa</div>
           </button>
-          <button type="button" class="pkg-card" data-pkg="L" data-fee="15">
-            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="20" height="26" rx="1"/><path d="M16 3v26"/></svg>
-            <div class="pkg-card__t">L</div>
-            <div class="pkg-card__d">Kleiderschrank, großes Sofa, Doppelbett</div>
-          </button>
-          <button type="button" class="pkg-card" data-pkg="XL" data-fee="30">
+          <button type="button" class="pkg-card" data-pkg="Premium" data-base="89" data-perkm="1.80">
             <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="18" height="26" rx="2"/><path d="M7 12h18M11 5v5M11 15v5"/></svg>
-            <div class="pkg-card__t">XL</div>
+            <div class="pkg-card__t">Premium</div>
             <div class="pkg-card__d">Küche, Kühlschrank, Waschmaschine</div>
           </button>
         </div>
@@ -173,13 +168,12 @@
     <section class="sec reveal" id="preise">
       <span class="eyebrow">Preise</span>
       <h2 class="h2">Transparent &amp; nachvollziehbar</h2>
-      <p class="section-lead">Startpreis plus Kilometerpreis – wie beim Taxi. Keine versteckten Kosten.</p>
+      <p class="section-lead">Jedes Paket hat einen eigenen Startpreis plus Kilometerpreis – wie beim Taxi. Keine versteckten Kosten.</p>
       <table class="price-table">
-        <tr><th>Startpreis</th><td>59 €</td></tr>
-        <tr><th>Pro Kilometer</th><td>1,50 €</td></tr>
-        <tr><th>Paket S / M</th><td>keine Aufpreis</td></tr>
-        <tr><th>Paket L</th><td>+ 15 €</td></tr>
-        <tr><th>Paket XL</th><td>+ 30 €</td></tr>
+        <tr><th>Paket</th><th>Startpreis</th><th>Pro Kilometer</th></tr>
+        <tr><td>Basic</td><td>59 €</td><td>1,30 €</td></tr>
+        <tr><td>Komfort</td><td>69 €</td><td>1,50 €</td></tr>
+        <tr><td>Premium</td><td>89 €</td><td>1,80 €</td></tr>
       </table>
       <p class="note note--info" style="margin-top:20px;">
         <svg class="note__ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/></svg>
@@ -264,6 +258,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js?v=19"></script>
-  <script src="moebeltaxi.js?v=1"></script>
+  <script src="moebeltaxi.js?v=2"></script>
 </body>
 </html>
