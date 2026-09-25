@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=45" />
+  <link rel="stylesheet" href="style.css?v=46" />
 </head>
 <body>
 
@@ -185,13 +185,20 @@
               <label class="extra-chip"><input type="radio" name="tw-assembly" value="Ja" /><span>Ja</span></label>
               <label class="extra-chip"><input type="radio" name="tw-assembly" value="Nein" /><span>Nein</span></label>
             </div>
+            <div class="tw-quote is-hidden" id="tw-assembly-quote">
+              <button type="button" class="btn-ghost" id="tw-assembly-quote-btn">Anfrage für Montage-Preis stellen</button>
+              <span class="tw-quote__done is-hidden" id="tw-assembly-quote-done">Anfrage gesendet ✓</span>
+            </div>
 
             <label class="calc-label">Verpackungsentsorgung?</label>
             <div class="extras-grid">
               <label class="extra-chip"><input type="radio" name="tw-disposal" value="Ja" /><span>Ja</span></label>
               <label class="extra-chip"><input type="radio" name="tw-disposal" value="Nein" /><span>Nein</span></label>
             </div>
-            <p class="tw-fee-note is-hidden" id="tw-fee-note">Preis richtet sich nach Aufwand – die genaue Summe nennen wir Ihnen bei der Bestätigung.</p>
+            <div class="tw-quote is-hidden" id="tw-disposal-quote">
+              <button type="button" class="btn-ghost" id="tw-disposal-quote-btn">Anfrage für Entsorgungs-Preis stellen</button>
+              <span class="tw-quote__done is-hidden" id="tw-disposal-quote-done">Anfrage gesendet ✓</span>
+            </div>
 
             <label class="calc-label">Foto Ihrer Möbel / Ihres Einkaufs (optional)</label>
             <label class="tw-photo" id="tw-photo-label">
@@ -375,6 +382,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js?v=19"></script>
-  <script src="moebeltaxi.js?v=5"></script>
+  <script src="moebeltaxi.js?v=6"></script>
 </body>
 </html>

@@ -352,10 +352,35 @@
     return prefix + formatDateLabel(dateISO) + ", " + (selectedSlot || "Zeitfenster wird abgestimmt");
   }
 
-  function wantsAssemblyOrDisposal() {
-    var assembly = document.querySelector('input[name="tw-assembly"]:checked');
-    var disposal = document.querySelector('input[name="tw-disposal"]:checked');
-    return (assembly && assembly.value === "Ja") || (disposal && disposal.value === "Ja");
+  function initExtraQuote(radioName, heading, sentenceLabel) {
+    var wrap = document.getElementById("tw-" + radioName + "-quote");
+    var btn = document.getElementById("tw-" + radioName + "-quote-btn");
+    var done = document.getElementById("tw-" + radioName + "-quote-done");
+
+    document.querySelectorAll('input[name="tw-' + radioName + '"]').forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        var isJa = radio.value === "Ja" && radio.checked;
+        wrap.classList.toggle("is-hidden", !isJa);
+        if (isJa) {
+          btn.classList.remove("is-hidden");
+          done.classList.add("is-hidden");
+        }
+      });
+    });
+
+    btn.addEventListener("click", function () {
+      var lines = [
+        "MöbelTaxi – Preisanfrage " + heading + ":",
+        "Abholadresse: " + (lastResult ? lastResult.from : "–"),
+        "Lieferadresse: " + (lastResult ? lastResult.to : "–"),
+        "Paket: " + (selectedPkg || "–"),
+        "Bitte senden Sie mir ein Preisangebot für " + sentenceLabel + "."
+      ];
+      var url = "https://wa.me/4915751017172?text=" + encodeURIComponent(lines.join("\n"));
+      window.open(url, "_blank", "noopener");
+      btn.classList.add("is-hidden");
+      done.classList.remove("is-hidden");
+    });
   }
 
   function initStep4() {
@@ -364,13 +389,9 @@
     var photoText = document.getElementById("tw-photo-text");
     var photoPreview = document.getElementById("tw-photo-preview");
     var photoImg = document.getElementById("tw-photo-img");
-    var feeNote = document.getElementById("tw-fee-note");
 
-    document.querySelectorAll('input[name="tw-assembly"], input[name="tw-disposal"]').forEach(function (radio) {
-      radio.addEventListener("change", function () {
-        feeNote.classList.toggle("is-hidden", !wantsAssemblyOrDisposal());
-      });
-    });
+    initExtraQuote("assembly", "Montage", "die Montage");
+    initExtraQuote("disposal", "Verpackungsentsorgung", "die Verpackungsentsorgung");
 
     photoInput.addEventListener("change", function (e) {
       var file = e.target.files && e.target.files[0];
@@ -401,14 +422,10 @@
     if (!lastResult || !selectedPkg) return;
     var kmCost = lastResult.distanceKm * selectedPerKm;
     var total = selectedBase + kmCost;
-    var note = wantsAssemblyOrDisposal()
-      ? '<div class="price-box__note">zzgl. Montage/Verpackungsentsorgung nach Aufwand – die genaue Summe nennen wir Ihnen bei der Bestätigung.</div>'
-      : "";
     box.innerHTML =
       '<div class="price-box__label">Ihr MöbelTaxi</div>' +
       '<div class="price-box__amount">' + total.toFixed(2).replace(".", ",") + ' € <span>ca.</span></div>' +
-      '<div class="price-box__breakdown">Paket ' + selectedPkg + ' · Strecke ca. ' + lastResult.distanceKm.toFixed(1) + ' km</div>' +
-      note;
+      '<div class="price-box__breakdown">Paket ' + selectedPkg + ' · Strecke ca. ' + lastResult.distanceKm.toFixed(1) + ' km</div>';
   }
 
   function initBooking() {
