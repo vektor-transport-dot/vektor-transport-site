@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="style.css?v=43" />
+  <link rel="stylesheet" href="style.css?v=44" />
 </head>
 <body>
 
@@ -68,77 +68,192 @@
     <section class="sec reveal" id="rechner">
       <span class="eyebrow">Preisrechner</span>
       <h2 class="h2">Was kostet Ihr Transport?</h2>
-      <p class="section-lead">Abholadresse und Zieladresse eingeben, Paketgröße wählen – der Preis wird sofort berechnet.</p>
+      <p class="section-lead">In wenigen Schritten zum Festpreis – aktuell exklusiv in Wuppertal. Weitere Städte folgen in Kürze.</p>
 
-      <div class="taxi-calc">
-        <label class="calc-label" for="taxi-from">Abholadresse</label>
-        <input class="field" type="text" id="taxi-from" placeholder="z. B. Schmiedestraße 81, 42279 Wuppertal (IKEA)" autocomplete="off" />
-
-        <label class="calc-label" for="taxi-to">Zieladresse</label>
-        <input class="field" type="text" id="taxi-to" placeholder="z. B. Musterstraße 1, Wuppertal" autocomplete="off" />
-
-        <div class="calc-map" id="taxi-map">
-          <div class="route-van" id="taxi-van">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8a1 1 0 0 1 1-1h9l4 4v5"/><path d="M3 16h14"/><circle cx="7" cy="17" r="1.6"/><circle cx="16" cy="17" r="1.6"/></svg>
+      <div class="taxi-calc" id="taxi-wizard">
+        <div id="tw-body">
+          <div class="tw-progress" id="tw-progress">
+            <span class="tw-progress__step is-active" data-step="1"></span>
+            <span class="tw-progress__step" data-step="2"></span>
+            <span class="tw-progress__step" data-step="3"></span>
+            <span class="tw-progress__step" data-step="4"></span>
+            <span class="tw-progress__step" data-step="5"></span>
           </div>
-        </div>
+          <p class="tw-stepline" id="tw-stepline">Schritt 1 von 5 · Adresse</p>
 
-        <label class="calc-label">Was möchten Sie transportieren?</label>
-        <div class="pkg-grid" id="pkg-grid">
-          <button type="button" class="pkg-card" data-pkg="Basic" data-base="59" data-perkm="1.30">
-            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v13M23 4v13M9 17h14M9 30l1-13M23 30l-1-13"/></svg>
-            <div class="pkg-card__t">Basic</div>
-            <div class="pkg-card__d">Kommode, Stuhl, Kartons</div>
-          </button>
-          <button type="button" class="pkg-card" data-pkg="Komfort" data-base="69" data-perkm="1.50">
-            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="24" height="10" rx="2"/><path d="M4 24v4M28 24v4M4 18h24"/><rect x="7" y="9" width="8" height="5" rx="1"/></svg>
-            <div class="pkg-card__t">Komfort</div>
-            <div class="pkg-card__d">Bett, Schrank, Sofa</div>
-          </button>
-          <button type="button" class="pkg-card" data-pkg="Premium" data-base="89" data-perkm="1.80">
-            <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="18" height="26" rx="2"/><path d="M7 12h18M11 5v5M11 15v5"/></svg>
-            <div class="pkg-card__t">Premium</div>
-            <div class="pkg-card__d">Küche, Kühlschrank, Waschmaschine</div>
-          </button>
-        </div>
+          <div class="tw-step is-active" data-step="1">
+            <label class="calc-label" for="taxi-from">Abholadresse</label>
+            <input class="field" type="text" id="taxi-from" placeholder="z. B. Schmiedestraße 81, 42279 Wuppertal (IKEA)" autocomplete="off" />
 
-        <a href="#" id="taxi-calc-btn" class="cta cta--block" style="margin-top:22px;">Preis berechnen</a>
-        <p class="err is-hidden" id="taxi-error"></p>
+            <label class="calc-label" for="taxi-to">Lieferadresse</label>
+            <input class="field" type="text" id="taxi-to" placeholder="z. B. Musterstraße 1, Wuppertal" autocomplete="off" />
 
-        <div class="price-box" id="price-box">
-          <p class="price-box__placeholder">Adressen eingeben und Paket wählen, um den Preis zu sehen.</p>
-        </div>
+            <div class="calc-map" id="taxi-map">
+              <div class="route-van" id="taxi-van">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 16V8a1 1 0 0 1 1-1h9l4 4v5"/><path d="M3 16h14"/><circle cx="7" cy="17" r="1.6"/><circle cx="16" cy="17" r="1.6"/></svg>
+              </div>
+            </div>
 
-        <div id="taxi-book" class="is-hidden">
-          <label class="calc-label" for="taxi-name">Name</label>
-          <input class="field" type="text" id="taxi-name" placeholder="Ihr Name" autocomplete="name" />
-          <label class="calc-label" for="taxi-phone">Telefonnummer</label>
-          <input class="field" type="tel" id="taxi-phone" placeholder="Für die Rückmeldung" autocomplete="tel" />
+            <p class="err is-hidden" id="tw-step1-error"></p>
+            <div class="tw-outside is-hidden" id="tw-outside-notice">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4M12 17h.01M10.29 3.86l-8.48 14.7A2 2 0 0 0 3.53 21h16.94a2 2 0 0 0 1.72-3.44l-8.48-14.7a2 2 0 0 0-3.42 0Z"/></svg>
+              <div>
+                <b>Die Adresse liegt außerhalb unseres aktuellen MöbelTaxi-Gebiets.</b>
+                <p>MöbelTaxi startet zunächst ausschließlich in Wuppertal. Gerne erstellen wir Ihnen ein individuelles Angebot.</p>
+                <div class="tw-outside__actions">
+                  <a class="cta cta--wa" href="https://wa.me/4915751017172" target="_blank" rel="noopener">WhatsApp</a>
+                  <a class="cta" href="index.html#anfrage">Individuelles Angebot anfragen</a>
+                </div>
+              </div>
+            </div>
 
-          <div class="req-send" style="margin-top:18px;">
-            <span class="req-send__label">Jetzt buchen über:</span>
-            <div class="req-send__row">
-              <button type="button" class="cta cta--wa" data-taxi-channel="whatsapp">
-                <svg viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5z"/><path fill="#fff" d="M23 19.2c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
-                <span>WhatsApp</span>
+            <button type="button" class="cta cta--block" id="tw-step1-next" style="margin-top:22px;">Weiter</button>
+          </div>
+
+          <div class="tw-step" data-step="2">
+            <label class="calc-label" style="margin-top:0;">Was möchten Sie transportieren?</label>
+            <div class="pkg-grid" id="pkg-grid">
+              <button type="button" class="pkg-card" data-pkg="Basic" data-base="59" data-perkm="1.30">
+                <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4v13M23 4v13M9 17h14M9 30l1-13M23 30l-1-13"/></svg>
+                <div class="pkg-card__t">Basic</div>
+                <div class="pkg-card__price">ab 59 €</div>
+                <div class="pkg-card__d">Für kleinere Möbelstücke: Kommode, Sessel, Stühle, kleiner Tisch, kleines Regal, Kartons.</div>
               </button>
-              <button type="button" class="cta cta--tg" data-taxi-channel="telegram">
-                <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-2 1.93c-.23.23-.42.42-.83.42z"/></svg>
-                <span>Telegram</span>
+              <button type="button" class="pkg-card" data-pkg="Komfort" data-base="69" data-perkm="1.50">
+                <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="14" width="24" height="10" rx="2"/><path d="M4 24v4M28 24v4M4 18h24"/><rect x="7" y="9" width="8" height="5" rx="1"/></svg>
+                <div class="pkg-card__t">Komfort</div>
+                <div class="pkg-card__price">ab 69 €</div>
+                <div class="pkg-card__d">Für größere Möbelstücke oder mehrere Teile: Sofa, Bett, Schrank, Esstisch oder mehrere Möbelstücke.</div>
               </button>
-              <button type="button" class="cta cta--mail" data-taxi-channel="email">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
-                <span>E-Mail</span>
+              <button type="button" class="pkg-card" data-pkg="Premium" data-base="89" data-perkm="1.80">
+                <svg viewBox="0 0 32 32" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="18" height="26" rx="2"/><path d="M7 12h18M11 5v5M11 15v5"/></svg>
+                <div class="pkg-card__t">Premium</div>
+                <div class="pkg-card__price">ab 89 €</div>
+                <div class="pkg-card__d">Für schwere, sperrige oder umfangreichere Transporte: Kühlschrank, Waschmaschine, große Schränke, Küchenmöbel oder größere Möbelhaus-Bestellungen.</div>
               </button>
             </div>
+            <p class="tw-pkg-hint">Unsicher, welches Paket passt?<br>Kein Problem – wir helfen Ihnen bei der Auswahl.</p>
+            <p class="err is-hidden" id="tw-step2-error"></p>
+            <div class="tw-nav-row">
+              <button type="button" class="btn-ghost tw-back" data-back="1">Zurück</button>
+              <button type="button" class="cta cta--block" id="tw-step2-next">Weiter</button>
+            </div>
           </div>
-          <p class="err is-hidden" id="taxi-book-error"></p>
+
+          <div class="tw-step" data-step="3">
+            <label class="calc-label" style="margin-top:0;">Wann dürfen wir liefern?</label>
+
+            <button type="button" class="tw-asap" id="tw-asap-btn">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+              <div>
+                <b>Schnellstmöglich</b>
+                <span>Wir prüfen die nächste verfügbare Abholung und bestätigen Ihnen schnellstmöglich die genaue Zeit.</span>
+              </div>
+            </button>
+
+            <div class="tw-day-row">
+              <button type="button" class="tw-day-btn" data-day="today">Heute</button>
+              <button type="button" class="tw-day-btn" data-day="tomorrow">Morgen</button>
+              <button type="button" class="tw-day-btn" data-day="custom">Wunschtermin</button>
+            </div>
+            <input class="field is-hidden" type="date" id="tw-date-input" style="color-scheme:dark;" />
+
+            <div class="tw-slots is-hidden" id="tw-slots">
+              <label class="calc-label">Verfügbare Zeitfenster</label>
+              <div class="tw-slot-grid" id="tw-slot-grid"></div>
+            </div>
+
+            <p class="err is-hidden" id="tw-step3-error"></p>
+            <div class="tw-nav-row">
+              <button type="button" class="btn-ghost tw-back" data-back="2">Zurück</button>
+              <button type="button" class="cta cta--block" id="tw-step3-next">Weiter</button>
+            </div>
+          </div>
+
+          <div class="tw-step" data-step="4">
+            <label class="calc-label" style="margin-top:0;" for="tw-floor">Etage</label>
+            <input class="field" type="number" id="tw-floor" min="0" max="30" placeholder="z. B. 3" />
+
+            <label class="calc-label">Aufzug vorhanden?</label>
+            <div class="extras-grid">
+              <label class="extra-chip"><input type="radio" name="tw-elevator" value="Ja" /><span>Ja</span></label>
+              <label class="extra-chip"><input type="radio" name="tw-elevator" value="Nein" /><span>Nein</span></label>
+            </div>
+
+            <label class="calc-label">Montage gewünscht?</label>
+            <div class="extras-grid">
+              <label class="extra-chip"><input type="radio" name="tw-assembly" value="Ja" /><span>Ja</span></label>
+              <label class="extra-chip"><input type="radio" name="tw-assembly" value="Nein" /><span>Nein</span></label>
+            </div>
+
+            <label class="calc-label">Verpackungsentsorgung?</label>
+            <div class="extras-grid">
+              <label class="extra-chip"><input type="radio" name="tw-disposal" value="Ja" /><span>Ja</span></label>
+              <label class="extra-chip"><input type="radio" name="tw-disposal" value="Nein" /><span>Nein</span></label>
+            </div>
+
+            <label class="calc-label">Foto Ihrer Möbel / Ihres Einkaufs (optional)</label>
+            <label class="tw-photo" id="tw-photo-label">
+              <input type="file" id="tw-photo-input" accept="image/*" capture="environment" />
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+              <span id="tw-photo-text">Foto auswählen</span>
+            </label>
+            <div class="tw-photo-preview is-hidden" id="tw-photo-preview"><img id="tw-photo-img" alt="Ausgewähltes Foto" /></div>
+
+            <div class="tw-nav-row">
+              <button type="button" class="btn-ghost tw-back" data-back="3">Zurück</button>
+              <button type="button" class="cta cta--block" id="tw-step4-next">Preis berechnen</button>
+            </div>
+          </div>
+
+          <div class="tw-step" data-step="5">
+            <div class="price-box" id="price-box">
+              <p class="price-box__placeholder">Adresse, Paket und Termin wählen, um den Preis zu sehen.</p>
+            </div>
+
+            <div class="tw-included">
+              <div class="tw-included__t">Enthalten</div>
+              <ul>
+                <li>Abholung</li>
+                <li>Trageservice</li>
+                <li>Transport</li>
+                <li>Lieferung bis zum gewünschten Aufstellort</li>
+              </ul>
+            </div>
+
+            <label class="calc-label" for="taxi-name">Jetzt MöbelTaxi buchen</label>
+            <input class="field" type="text" id="taxi-name" placeholder="Ihr Name" autocomplete="name" />
+            <input class="field" type="tel" id="taxi-phone" placeholder="Telefonnummer für die Rückmeldung" autocomplete="tel" style="margin-top:10px;" />
+
+            <div class="req-send" style="margin-top:18px;">
+              <span class="req-send__label">Buchungsanfrage senden über:</span>
+              <div class="req-send__row">
+                <button type="button" class="cta cta--wa" data-taxi-channel="whatsapp">
+                  <svg viewBox="0 0 32 32" width="20" height="20"><path fill="#25D366" d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.4 2 7.8L.5 31.5l7.9-2c2.3 1.2 4.8 1.9 7.6 1.9 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5z"/><path fill="#fff" d="M23 19.2c-.4-.2-2.3-1.1-2.6-1.3-.3-.1-.6-.2-.9.2-.3.4-1 1.3-1.2 1.5-.2.2-.4.3-.8.1-.4-.2-1.6-.6-3.1-1.9-1.1-1-1.9-2.3-2.1-2.7-.2-.4 0-.6.2-.8l.6-.7c.2-.2.3-.4.4-.6.1-.2 0-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.8-.6-.7-.9-.7h-.7c-.2 0-.6.1-1 .5-.3.4-1.3 1.3-1.3 3.1s1.3 3.6 1.5 3.9c.2.3 2.6 4 6.3 5.6.9.4 1.6.6 2.1.8.9.3 1.7.2 2.3.1.7-.1 2.3-.9 2.6-1.8.3-.9.3-1.7.2-1.8-.1-.2-.3-.3-.7-.5z"/></svg>
+                  <span>WhatsApp</span>
+                </button>
+                <button type="button" class="cta cta--tg" data-taxi-channel="telegram">
+                  <svg viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="12" fill="#229ED9"/><path fill="#fff" d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.14-3.05-2 1.93c-.23.23-.42.42-.83.42z"/></svg>
+                  <span>Telegram</span>
+                </button>
+                <button type="button" class="cta cta--mail" data-taxi-channel="email">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+                  <span>E-Mail</span>
+                </button>
+              </div>
+            </div>
+            <p class="err is-hidden" id="taxi-book-error"></p>
+
+            <div class="tw-nav-row">
+              <button type="button" class="btn-ghost tw-back" data-back="4">Zurück</button>
+            </div>
+          </div>
         </div>
 
         <div class="done is-hidden" id="taxi-done">
           <div class="done__ring"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></div>
-          <h3>Anfrage vorbereitet!</h3>
-          <p>Senden Sie die vorausgefüllte Nachricht ab, um Ihre Buchung zu bestätigen. Ein Mitarbeiter meldet sich so schnell wie möglich mit einem konkreten Zeitrahmen. Sie können der Nachricht optional ein Foto Ihres Kassenbons beifügen.</p>
+          <h3>Buchungsanfrage erhalten!</h3>
+          <p>Vielen Dank! Wir haben Ihre Buchungsanfrage erhalten und prüfen jetzt die Verfügbarkeit. Wir bestätigen Ihnen Ihren Wunschtermin schnellstmöglich. Senden Sie die vorausgefüllte Nachricht ab, damit wir sie erhalten – ein Foto können Sie der Nachricht optional direkt anhängen.</p>
         </div>
       </div>
     </section>
@@ -149,13 +264,13 @@
       <div class="taxi-steps">
         <div class="taxi-step">
           <div class="taxi-step__num">01</div>
-          <div class="taxi-step__t">Route &amp; Paket wählen</div>
-          <div class="taxi-step__d">Abholadresse, Zieladresse und Größe eingeben – der Preis erscheint sofort.</div>
+          <div class="taxi-step__t">Route, Paket &amp; Termin wählen</div>
+          <div class="taxi-step__d">Abholadresse, Lieferadresse, Paketgröße und Wunschtermin eingeben – der Preis erscheint sofort.</div>
         </div>
         <div class="taxi-step">
           <div class="taxi-step__num">02</div>
           <div class="taxi-step__t">Buchen</div>
-          <div class="taxi-step__d">Name und Telefonnummer angeben und die Anfrage per WhatsApp, Telegram oder E-Mail senden.</div>
+          <div class="taxi-step__d">Name und Telefonnummer angeben und die Buchungsanfrage per WhatsApp, Telegram oder E-Mail senden.</div>
         </div>
         <div class="taxi-step">
           <div class="taxi-step__num">03</div>
@@ -187,9 +302,10 @@
       <div class="faq-list" id="faq-list">
         <div class="faq-item"><div class="faq-q"><span>Muss ich beim Tragen mithelfen?</span></div><div class="faq-a"><p>Nein. Unser Team ist zu zweit vor Ort, übernimmt Beladen, Transport und Entladen und trägt Ihr Möbelstück bis in die gewünschte Etage.</p></div></div>
         <div class="faq-item"><div class="faq-q"><span>Was, wenn mein Möbelstück nicht in die vorgeschlagene Größe passt?</span></div><div class="faq-a"><p>Kein Problem – schreiben Sie uns kurz dazu, was es genau ist. Wir bestätigen die passende Paketgröße, bevor der Transport losgeht.</p></div></div>
-        <div class="faq-item"><div class="faq-q"><span>Wie schnell wird meine Anfrage bestätigt?</span></div><div class="faq-a"><p>Ein Mitarbeiter bestätigt Ihre Anfrage so schnell wie möglich und nennt Ihnen einen konkreten Zeitrahmen.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Wie schnell wird meine Buchungsanfrage bestätigt?</span></div><div class="faq-a"><p>Nach dem Absenden prüfen wir die Verfügbarkeit und bestätigen Ihnen Ihren Wunschtermin so schnell wie möglich.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Was bedeutet „Schnellstmöglich“ genau?</span></div><div class="faq-a"><p>Wir prüfen die nächste verfügbare Abholung und bestätigen Ihnen schnellstmöglich die genaue Zeit. Eine feste Zeitspanne wie „in 30 Minuten“ können wir aktuell noch nicht garantieren.</p></div></div>
         <div class="faq-item"><div class="faq-q"><span>Wie bezahle ich?</span></div><div class="faq-a"><p>Direkt vor Ort beim Fahrer – per Karte (Kartenterminal) oder bar.</p></div></div>
-        <div class="faq-item"><div class="faq-q"><span>Gilt das MöbelTaxi nur in Wuppertal?</span></div><div class="faq-a"><p>Der Preisrechner funktioniert für jede Adresse – wir sind aus Wuppertal aus regelmäßig auch in Düsseldorf, Köln und der weiteren Umgebung unterwegs.</p></div></div>
+        <div class="faq-item"><div class="faq-q"><span>Gilt das MöbelTaxi nur in Wuppertal?</span></div><div class="faq-a"><p>Ja, MöbelTaxi startet zunächst ausschließlich in Wuppertal. Liegt Ihre Adresse außerhalb, erstellen wir Ihnen gerne ein individuelles Angebot – weitere Städte folgen in Kürze.</p></div></div>
       </div>
     </section>
 
@@ -258,6 +374,6 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="app.js?v=19"></script>
-  <script src="moebeltaxi.js?v=2"></script>
+  <script src="moebeltaxi.js?v=3"></script>
 </body>
 </html>

@@ -420,16 +420,85 @@ img { max-width: 100%; display: block; }
 }
 .pkg-card svg { margin: 0 auto 8px; display: block; color: var(--muted); transition: color .2s ease; }
 .pkg-card__t { font-weight: 800; font-size: 14px; }
-.pkg-card__d { color: var(--muted); font-size: 11px; line-height: 1.4; margin-top: 3px; }
+.pkg-card__price { color: var(--accent); font-weight: 800; font-size: 12px; margin-top: 2px; }
+.pkg-card__d { color: var(--muted); font-size: 11px; line-height: 1.4; margin-top: 5px; }
 .pkg-card:hover { border-color: rgba(124,157,181,.5); }
 .pkg-card.is-active { border-color: var(--accent); background: rgba(124,157,181,.12); }
 .pkg-card.is-active svg { color: var(--accent); }
+.tw-pkg-hint { color: var(--muted); font-size: 12.5px; line-height: 1.5; text-align: center; margin: 16px 0 0; }
 
-.price-box { margin-top: 22px; padding: 20px; border-radius: var(--r); background: var(--card-2); border: 1px solid var(--line); }
+.price-box { margin-top: 0; padding: 20px; border-radius: var(--r); background: var(--card-2); border: 1px solid var(--line); }
+.price-box__label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 6px; }
 .price-box__amount { font-size: 38px; font-weight: 800; letter-spacing: -.02em; }
 .price-box__amount span { font-size: 18px; font-weight: 700; color: var(--muted); }
 .price-box__breakdown { color: var(--muted); font-size: 12.5px; margin-top: 6px; line-height: 1.6; }
 .price-box__placeholder { color: var(--muted); font-size: 14px; }
+
+/* MöbelTaxi booking wizard */
+.tw-progress { display: flex; gap: 6px; margin-bottom: 12px; }
+.tw-progress__step { flex: 1; height: 4px; border-radius: 2px; background: var(--line); transition: background .25s ease; }
+.tw-progress__step.is-active, .tw-progress__step.is-done { background: var(--accent); }
+.tw-stepline { color: var(--muted); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; margin: 0 0 22px; }
+.tw-step { display: none; }
+.tw-step.is-active { display: block; }
+.tw-nav-row { display: flex; gap: 10px; margin-top: 24px; }
+.tw-nav-row .btn-ghost { flex: 0 0 auto; }
+.tw-nav-row .cta { flex: 1; }
+
+.tw-outside {
+  display: flex; gap: 12px; align-items: flex-start; background: var(--card-2); border: 1px solid var(--line);
+  border-radius: var(--r); padding: 16px 18px; margin-top: 18px;
+}
+.tw-outside svg { flex: 0 0 auto; color: var(--gold); margin-top: 2px; }
+.tw-outside b { display: block; font-size: 14px; margin-bottom: 4px; }
+.tw-outside p { color: var(--muted); font-size: 13px; margin: 0 0 12px; }
+.tw-outside__actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+.tw-asap {
+  display: flex; gap: 14px; align-items: flex-start; width: 100%; text-align: left; cursor: pointer;
+  background: rgba(255,187,28,.08); border: 1px solid rgba(255,187,28,.4); border-radius: var(--r);
+  padding: 16px 18px; margin-bottom: 18px; color: var(--text); font-family: inherit;
+}
+.tw-asap svg { flex: 0 0 auto; color: var(--gold); margin-top: 2px; }
+.tw-asap b { display: block; font-size: 14.5px; margin-bottom: 3px; }
+.tw-asap span { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.5; }
+.tw-asap.is-active { border-color: var(--gold); background: rgba(255,187,28,.16); }
+
+.tw-day-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.tw-day-btn {
+  flex: 1 1 100px; text-align: center; padding: 14px 10px; border-radius: 12px; border: 1px solid var(--line);
+  background: var(--card-2); color: var(--text); font-weight: 700; font-size: 13.5px; cursor: pointer;
+  font-family: inherit; transition: border-color .2s ease, background .2s ease, color .2s ease;
+}
+.tw-day-btn:hover { border-color: rgba(124,157,181,.5); }
+.tw-day-btn.is-active { border-color: var(--accent); background: rgba(124,157,181,.12); color: var(--accent); }
+
+.tw-slots { margin-top: 14px; }
+.tw-slot-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 9px; }
+.tw-slot {
+  padding: 12px 10px; border-radius: 10px; border: 1px solid var(--line); background: var(--card-2);
+  color: var(--text); font-weight: 700; font-size: 13px; text-align: center; cursor: pointer; font-family: inherit;
+  transition: border-color .2s ease, background .2s ease, opacity .2s ease, color .2s ease;
+}
+.tw-slot:hover { border-color: rgba(124,157,181,.5); }
+.tw-slot.is-active { border-color: var(--accent); background: rgba(124,157,181,.14); color: var(--accent); }
+.tw-slot.is-disabled { opacity: .35; cursor: not-allowed; text-decoration: line-through; }
+
+.tw-photo {
+  display: flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px dashed var(--line);
+  border-radius: var(--r); padding: 18px; cursor: pointer; color: var(--muted); font-size: 13.5px; font-weight: 700;
+  text-align: center; transition: border-color .2s ease, color .2s ease; position: relative;
+}
+.tw-photo:hover { border-color: var(--accent); color: var(--accent); }
+.tw-photo input { position: absolute; opacity: 0; width: 0; height: 0; }
+.tw-photo-preview { margin-top: 12px; border-radius: var(--r); overflow: hidden; border: 1px solid var(--line); max-width: 160px; }
+.tw-photo-preview img { width: 100%; display: block; }
+
+.tw-included { margin-top: 16px; }
+.tw-included__t { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 8px; }
+.tw-included ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.tw-included li { font-size: 13.5px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.tw-included li::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); flex: 0 0 auto; }
 
 .taxi-steps { display: flex; flex-direction: column; border-top: 1px solid var(--line); margin-top: 8px; }
 .taxi-step { display: grid; grid-template-columns: 40px 1fr; gap: 4px 18px; padding: 20px 0; border-bottom: 1px solid var(--line); }
@@ -446,7 +515,9 @@ img { max-width: 100%; display: block; }
 }
 @media (max-width: 420px) {
   .pkg-grid { grid-template-columns: repeat(1, 1fr); }
-  .pkg-card { display: flex; align-items: center; gap: 12px; text-align: left; padding: 12px 14px; }
-  .pkg-card svg { margin: 0; flex: 0 0 auto; }
+  .pkg-card { display: grid; grid-template-columns: 26px 1fr; column-gap: 12px; text-align: left; padding: 14px 16px; }
+  .pkg-card svg { margin: 2px 0 0; }
   .pkg-card__t { font-size: 15px; }
+  .pkg-card__price { grid-column: 2; }
+  .pkg-card__d { grid-column: 2; }
 }

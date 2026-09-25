@@ -4,12 +4,45 @@
   var ROAD_FACTOR = 1.3; // straight-line distance -> rough road-distance estimate
   var WUPPERTAL = { lat: 51.2562, lon: 7.1508 };
 
-  var selectedPkg = null;
-  var selectedBase = 0;
-  var selectedPerKm = 0;
-  var lastResult = null; // { distanceKm, price, from, to }
+  // Service areas MöbelTaxi currently covers. Add more cities here later
+  // (e.g. duesseldorf, koeln) once MöbelTaxi expands beyond Wuppertal.
+  var SERVICE_AREAS = {
+    wuppertal: {
+      name: "Wuppertal",
+      matches: function (addr) {
+        if (!addr) return false;
+        var city = (addr.city || addr.town || addr.village || addr.municipality || "").toLowerCase();
+        var postcode = addr.postcode || "";
+        return city.indexOf("wuppertal") !== -1 || /^42\d{3}$/.test(postcode);
+      }
+    }
+  };
+  function isInServiceArea(addr) {
+    for (var key in SERVICE_AREAS) {
+      if (SERVICE_AREAS[key].matches(addr)) return true;
+    }
+    return false;
+  }
 
-  var map, fromMarker, toMarker, routeLine, van;
+  var SLOTS = ["08:00–10:00", "10:00–12:00", "12:00–14:00", "14:00–16:00", "16:00–18:00"];
+
+  // Placeholder availability management: block a date's slots by adding its
+  // ISO date (YYYY-MM-DD) with an array of blocked slot labels. No backend
+  // yet -- this is edited by hand until real calendar sync exists.
+  var BLOCKED_SLOTS = {
+    // "2026-09-26": ["10:00–12:00", "14:00–16:00"]
+  };
+
+  var STEP_LABELS = ["Adresse", "Paket", "Termin", "Zusatzangaben", "Preis & Buchung"];
+
+  var selectedPkg = null, selectedBase = 0, selectedPerKm = 0;
+  var lastResult = null; // { distanceKm, from, to }
+  var dayType = null; // "today" | "tomorrow" | "custom" | "asap"
+  var dateISO = null;
+  var selectedSlot = null;
+  var photoAttached = false;
+
+  var map, fromMarker, toMarker, routeLine;
 
   function initMap() {
     var el = document.getElementById("taxi-map");
@@ -22,12 +55,17 @@
   }
 
   function geocode(query) {
-    var url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=de&q=" + encodeURIComponent(query);
+    var url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&countrycodes=de&q=" + encodeURIComponent(query);
     return fetch(url, { headers: { "Accept": "application/json" } })
       .then(function (res) { return res.json(); })
       .then(function (results) {
         if (!results || !results.length) return null;
-        return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon), label: results[0].display_name };
+        return {
+          lat: parseFloat(results[0].lat),
+          lon: parseFloat(results[0].lon),
+          label: results[0].display_name,
+          address: results[0].address || {}
+        };
       });
   }
 
@@ -66,7 +104,6 @@
 
   function animateVan(from, to) {
     var van = document.getElementById("taxi-van");
-    var mapEl = document.getElementById("taxi-map");
     if (!van || !map) return;
 
     function place(latlng) {
@@ -78,7 +115,6 @@
     van.style.transition = "none";
     place([from.lat, from.lon]);
     van.style.opacity = "1";
-    // force reflow so the next transition actually animates
     void van.offsetWidth;
     van.style.transition = "left 1.6s linear, top 1.6s linear, opacity .3s ease";
     requestAnimationFrame(function () {
@@ -86,26 +122,92 @@
     });
   }
 
-  function updatePriceBox() {
-    var box = document.getElementById("price-box");
-    var bookBox = document.getElementById("taxi-book");
-    if (!lastResult || !selectedPkg) {
-      box.innerHTML = '<p class="price-box__placeholder">Adressen eingeben und Paket wählen, um den Preis zu sehen.</p>';
-      bookBox.classList.add("is-hidden");
-      return;
-    }
-    var kmCost = lastResult.distanceKm * selectedPerKm;
-    var total = selectedBase + kmCost;
-    box.innerHTML =
-      '<div class="price-box__amount">' + total.toFixed(0) + ' € <span>ca.</span></div>' +
-      '<div class="price-box__breakdown">' +
-        'Paket ' + selectedPkg + ' &middot; Strecke: ca. ' + lastResult.distanceKm.toFixed(1) + ' km &middot; Startpreis ' + selectedBase + ' € + ' + kmCost.toFixed(2) + ' € Kilometerpreis (' + selectedPerKm.toFixed(2) + ' €/km)' +
-      '</div>';
-    bookBox.classList.remove("is-hidden");
+  function goToStep(n) {
+    document.querySelectorAll(".tw-step").forEach(function (s) {
+      s.classList.toggle("is-active", parseInt(s.getAttribute("data-step"), 10) === n);
+    });
+    document.querySelectorAll(".tw-progress__step").forEach(function (s) {
+      var idx = parseInt(s.getAttribute("data-step"), 10);
+      s.classList.toggle("is-active", idx === n);
+      s.classList.toggle("is-done", idx < n);
+    });
+    var line = document.getElementById("tw-stepline");
+    if (line) line.textContent = "Schritt " + n + " von 5 · " + STEP_LABELS[n - 1];
+    var body = document.getElementById("tw-body");
+    if (body) body.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function initPackages() {
+  function initBackButtons() {
+    document.querySelectorAll(".tw-back").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        goToStep(parseInt(btn.getAttribute("data-back"), 10));
+      });
+    });
+  }
+
+  function initStep1() {
+    var fromInput = document.getElementById("taxi-from");
+    var toInput = document.getElementById("taxi-to");
+    var btn = document.getElementById("tw-step1-next");
+    var err = document.getElementById("tw-step1-error");
+    var outside = document.getElementById("tw-outside-notice");
+    if (!btn) return;
+
+    [fromInput, toInput].forEach(function (input) {
+      input.addEventListener("input", function () {
+        outside.classList.add("is-hidden");
+        err.classList.add("is-hidden");
+      });
+    });
+
+    btn.addEventListener("click", function () {
+      var fromVal = fromInput.value.trim();
+      var toVal = toInput.value.trim();
+      err.classList.add("is-hidden");
+      outside.classList.add("is-hidden");
+
+      if (!fromVal || !toVal) {
+        err.textContent = "Bitte Abhol- und Lieferadresse eingeben.";
+        err.classList.remove("is-hidden");
+        return;
+      }
+
+      var originalText = btn.textContent;
+      btn.textContent = "Prüfe Adresse…";
+      btn.disabled = true;
+
+      Promise.all([geocode(fromVal), geocode(toVal)]).then(function (res) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        var from = res[0], to = res[1];
+        if (!from || !to) {
+          err.textContent = "Eine der Adressen konnte nicht gefunden werden. Bitte präzisieren (Straße, PLZ, Ort).";
+          err.classList.remove("is-hidden");
+          return;
+        }
+        if (!isInServiceArea(from.address) || !isInServiceArea(to.address)) {
+          outside.classList.remove("is-hidden");
+          return;
+        }
+        var straight = haversineKm(from, to);
+        var distanceKm = straight * ROAD_FACTOR;
+        lastResult = { distanceKm: distanceKm, from: fromVal, to: toVal };
+        drawRoute(from, to);
+        goToStep(2);
+      }).catch(function () {
+        btn.textContent = originalText;
+        btn.disabled = false;
+        err.textContent = "Die Adressen konnten gerade nicht geprüft werden. Bitte versuchen Sie es erneut.";
+        err.classList.remove("is-hidden");
+      });
+    });
+  }
+
+  function initStep2() {
     var cards = document.querySelectorAll(".pkg-card");
+    var btn = document.getElementById("tw-step2-next");
+    var err = document.getElementById("tw-step2-error");
+
     cards.forEach(function (card) {
       card.addEventListener("click", function () {
         cards.forEach(function (c) { c.classList.remove("is-active"); });
@@ -113,59 +215,188 @@
         selectedPkg = card.getAttribute("data-pkg");
         selectedBase = parseFloat(card.getAttribute("data-base")) || 0;
         selectedPerKm = parseFloat(card.getAttribute("data-perkm")) || 0;
-        updatePriceBox();
+        err.classList.add("is-hidden");
+        // Future: auto-select a package here from IKEA receipt/article data.
       });
     });
-  }
 
-  function initCalcButton() {
-    var btn = document.getElementById("taxi-calc-btn");
-    var err = document.getElementById("taxi-error");
-    if (!btn) return;
-    btn.addEventListener("click", function (e) {
-      e.preventDefault();
-      var fromVal = document.getElementById("taxi-from").value.trim();
-      var toVal = document.getElementById("taxi-to").value.trim();
-      err.classList.add("is-hidden");
-
-      if (!fromVal || !toVal) {
-        err.textContent = "Bitte Abhol- und Zieladresse eingeben.";
-        err.classList.remove("is-hidden");
-        return;
-      }
+    btn.addEventListener("click", function () {
       if (!selectedPkg) {
         err.textContent = "Bitte eine Paketgröße wählen.";
         err.classList.remove("is-hidden");
         return;
       }
+      goToStep(3);
+    });
+  }
 
-      var originalText = btn.textContent;
-      btn.textContent = "Berechne...";
+  function todayISO(offsetDays) {
+    var d = new Date();
+    d.setDate(d.getDate() + offsetDays);
+    return d.toISOString().slice(0, 10);
+  }
 
-      Promise.all([geocode(fromVal), geocode(toVal)]).then(function (res) {
-        btn.textContent = originalText;
-        var from = res[0], to = res[1];
-        if (!from || !to) {
-          err.textContent = "Eine der Adressen konnte nicht gefunden werden. Bitte präzisieren (Straße, PLZ, Ort).";
-          err.classList.remove("is-hidden");
-          return;
+  function formatDateLabel(iso) {
+    var d = new Date(iso + "T00:00:00");
+    return d.toLocaleDateString("de-DE", { weekday: "short", day: "2-digit", month: "2-digit", year: "numeric" });
+  }
+
+  function renderSlots(iso) {
+    var grid = document.getElementById("tw-slot-grid");
+    var wrap = document.getElementById("tw-slots");
+    grid.innerHTML = "";
+    selectedSlot = null;
+
+    var blocked = BLOCKED_SLOTS[iso] || [];
+    var isToday = iso === todayISO(0);
+    var nowHour = new Date().getHours();
+
+    SLOTS.forEach(function (slot) {
+      var startHour = parseInt(slot.split(":")[0], 10);
+      var disabled = blocked.indexOf(slot) !== -1 || (isToday && startHour <= nowHour + 1);
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "tw-slot" + (disabled ? " is-disabled" : "");
+      btn.textContent = slot;
+      if (disabled) {
+        btn.disabled = true;
+      } else {
+        btn.addEventListener("click", function () {
+          grid.querySelectorAll(".tw-slot").forEach(function (s) { s.classList.remove("is-active"); });
+          btn.classList.add("is-active");
+          selectedSlot = slot;
+        });
+      }
+      grid.appendChild(btn);
+    });
+
+    wrap.classList.remove("is-hidden");
+  }
+
+  function initStep3() {
+    var asapBtn = document.getElementById("tw-asap-btn");
+    var dayBtns = document.querySelectorAll(".tw-day-btn");
+    var dateInput = document.getElementById("tw-date-input");
+    var slotsWrap = document.getElementById("tw-slots");
+    var btn = document.getElementById("tw-step3-next");
+    var err = document.getElementById("tw-step3-error");
+
+    var minDate = todayISO(0);
+    dateInput.setAttribute("min", minDate);
+
+    asapBtn.addEventListener("click", function () {
+      dayBtns.forEach(function (b) { b.classList.remove("is-active"); });
+      dateInput.classList.add("is-hidden");
+      slotsWrap.classList.add("is-hidden");
+      asapBtn.classList.add("is-active");
+      dayType = "asap";
+      dateISO = null;
+      selectedSlot = null;
+      err.classList.add("is-hidden");
+    });
+
+    dayBtns.forEach(function (dbtn) {
+      dbtn.addEventListener("click", function () {
+        dayBtns.forEach(function (b) { b.classList.remove("is-active"); });
+        dbtn.classList.add("is-active");
+        asapBtn.classList.remove("is-active");
+        err.classList.add("is-hidden");
+        dayType = dbtn.getAttribute("data-day");
+
+        if (dayType === "custom") {
+          dateInput.classList.remove("is-hidden");
+          dateInput.value = "";
+          dateISO = null;
+          slotsWrap.classList.add("is-hidden");
+        } else {
+          dateInput.classList.add("is-hidden");
+          dateISO = todayISO(dayType === "tomorrow" ? 1 : 0);
+          renderSlots(dateISO);
         }
-        var straight = haversineKm(from, to);
-        var distanceKm = straight * ROAD_FACTOR;
-        lastResult = { distanceKm: distanceKm, from: fromVal, to: toVal };
-        updatePriceBox();
-        drawRoute(from, to);
-      }).catch(function () {
-        btn.textContent = originalText;
-        err.textContent = "Die Adressen konnten gerade nicht geprüft werden. Bitte versuchen Sie es erneut.";
-        err.classList.remove("is-hidden");
       });
     });
+
+    dateInput.addEventListener("change", function () {
+      if (dateInput.value) {
+        dateISO = dateInput.value;
+        renderSlots(dateISO);
+      }
+    });
+
+    btn.addEventListener("click", function () {
+      err.classList.add("is-hidden");
+      if (dayType === "asap") { goToStep(4); return; }
+      if (!dayType) {
+        err.textContent = "Bitte einen Tag oder „Schnellstmöglich“ wählen.";
+        err.classList.remove("is-hidden");
+        return;
+      }
+      if (dayType === "custom" && !dateISO) {
+        err.textContent = "Bitte ein Datum wählen.";
+        err.classList.remove("is-hidden");
+        return;
+      }
+      if (!selectedSlot) {
+        err.textContent = "Bitte ein Zeitfenster wählen.";
+        err.classList.remove("is-hidden");
+        return;
+      }
+      goToStep(4);
+    });
+  }
+
+  function terminText() {
+    if (dayType === "asap") return "Schnellstmöglich (nächste verfügbare Abholung)";
+    if (!dateISO) return "–";
+    var prefix = dayType === "today" ? "Heute, " : dayType === "tomorrow" ? "Morgen, " : "";
+    return prefix + formatDateLabel(dateISO) + ", " + (selectedSlot || "Zeitfenster wird abgestimmt");
+  }
+
+  function initStep4() {
+    var btn = document.getElementById("tw-step4-next");
+    var photoInput = document.getElementById("tw-photo-input");
+    var photoText = document.getElementById("tw-photo-text");
+    var photoPreview = document.getElementById("tw-photo-preview");
+    var photoImg = document.getElementById("tw-photo-img");
+
+    photoInput.addEventListener("change", function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) {
+        photoAttached = false;
+        photoText.textContent = "Foto auswählen";
+        photoPreview.classList.add("is-hidden");
+        return;
+      }
+      photoAttached = true;
+      photoText.textContent = file.name;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        photoImg.src = ev.target.result;
+        photoPreview.classList.remove("is-hidden");
+      };
+      reader.readAsDataURL(file);
+    });
+
+    btn.addEventListener("click", function () {
+      updatePriceBox();
+      goToStep(5);
+    });
+  }
+
+  function updatePriceBox() {
+    var box = document.getElementById("price-box");
+    if (!lastResult || !selectedPkg) return;
+    var kmCost = lastResult.distanceKm * selectedPerKm;
+    var total = selectedBase + kmCost;
+    box.innerHTML =
+      '<div class="price-box__label">Ihr MöbelTaxi</div>' +
+      '<div class="price-box__amount">' + total.toFixed(2).replace(".", ",") + ' € <span>ca.</span></div>' +
+      '<div class="price-box__breakdown">Paket ' + selectedPkg + ' · Strecke ca. ' + lastResult.distanceKm.toFixed(1) + ' km</div>';
   }
 
   function initBooking() {
     var bookErr = document.getElementById("taxi-book-error");
-    document.querySelectorAll("#taxi-book [data-taxi-channel]").forEach(function (btn) {
+    document.querySelectorAll("[data-taxi-channel]").forEach(function (btn) {
       btn.addEventListener("click", function () {
         var name = document.getElementById("taxi-name").value.trim();
         var phone = document.getElementById("taxi-phone").value.trim();
@@ -177,23 +408,35 @@
           return;
         }
         if (!lastResult || !selectedPkg) {
-          bookErr.textContent = "Bitte zuerst den Preis berechnen.";
+          bookErr.textContent = "Bitte zuerst Adresse und Paket wählen.";
           bookErr.classList.remove("is-hidden");
           return;
         }
 
         var kmCost = lastResult.distanceKm * selectedPerKm;
         var total = selectedBase + kmCost;
+        var floorVal = document.getElementById("tw-floor").value.trim();
+        var elevatorVal = document.querySelector('input[name="tw-elevator"]:checked');
+        var assemblyVal = document.querySelector('input[name="tw-assembly"]:checked');
+        var disposalVal = document.querySelector('input[name="tw-disposal"]:checked');
+
         var lines = [
-          "MöbelTaxi-Anfrage:",
+          "MöbelTaxi-Buchungsanfrage:",
           "Name: " + name,
           "Telefon: " + phone,
           "Abholadresse: " + lastResult.from,
-          "Zieladresse: " + lastResult.to,
+          "Lieferadresse: " + lastResult.to,
           "Paket: " + selectedPkg,
-          "Geschätzter Preis: ca. " + total.toFixed(0) + " €"
+          "Wunschtermin: " + terminText(),
+          "Etage: " + (floorVal || "nicht angegeben"),
+          "Aufzug vorhanden: " + (elevatorVal ? elevatorVal.value : "nicht angegeben"),
+          "Montage gewünscht: " + (assemblyVal ? assemblyVal.value : "nicht angegeben"),
+          "Verpackungsentsorgung: " + (disposalVal ? disposalVal.value : "nicht angegeben"),
+          "Geschätzter Preis: ca. " + total.toFixed(2).replace(".", ",") + " €"
         ];
+        if (photoAttached) lines.push("Foto: ausgewählt (bitte dieser Nachricht manuell anhängen)");
         var text = lines.join("\n");
+
         var channel = this.getAttribute("data-taxi-channel");
         var url;
         if (channel === "whatsapp") {
@@ -201,10 +444,10 @@
         } else if (channel === "telegram") {
           url = "https://t.me/VektorTransport?text=" + encodeURIComponent(text);
         } else {
-          url = "mailto:info@vektor-transport.de?subject=" + encodeURIComponent("MöbelTaxi-Anfrage von " + name) + "&body=" + encodeURIComponent(text);
+          url = "mailto:info@vektor-transport.de?subject=" + encodeURIComponent("MöbelTaxi-Buchungsanfrage von " + name) + "&body=" + encodeURIComponent(text);
         }
 
-        document.getElementById("taxi-book").classList.add("is-hidden");
+        document.getElementById("tw-body").classList.add("is-hidden");
         document.getElementById("taxi-done").classList.remove("is-hidden");
 
         if (channel === "email") {
@@ -218,8 +461,12 @@
 
   document.addEventListener("DOMContentLoaded", function () {
     initMap();
-    initPackages();
-    initCalcButton();
+    goToStep(1);
+    initBackButtons();
+    initStep1();
+    initStep2();
+    initStep3();
+    initStep4();
     initBooking();
   });
 })();
