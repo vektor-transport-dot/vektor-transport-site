@@ -352,12 +352,25 @@
     return prefix + formatDateLabel(dateISO) + ", " + (selectedSlot || "Zeitfenster wird abgestimmt");
   }
 
+  function wantsAssemblyOrDisposal() {
+    var assembly = document.querySelector('input[name="tw-assembly"]:checked');
+    var disposal = document.querySelector('input[name="tw-disposal"]:checked');
+    return (assembly && assembly.value === "Ja") || (disposal && disposal.value === "Ja");
+  }
+
   function initStep4() {
     var btn = document.getElementById("tw-step4-next");
     var photoInput = document.getElementById("tw-photo-input");
     var photoText = document.getElementById("tw-photo-text");
     var photoPreview = document.getElementById("tw-photo-preview");
     var photoImg = document.getElementById("tw-photo-img");
+    var feeNote = document.getElementById("tw-fee-note");
+
+    document.querySelectorAll('input[name="tw-assembly"], input[name="tw-disposal"]').forEach(function (radio) {
+      radio.addEventListener("change", function () {
+        feeNote.classList.toggle("is-hidden", !wantsAssemblyOrDisposal());
+      });
+    });
 
     photoInput.addEventListener("change", function (e) {
       var file = e.target.files && e.target.files[0];
@@ -388,10 +401,14 @@
     if (!lastResult || !selectedPkg) return;
     var kmCost = lastResult.distanceKm * selectedPerKm;
     var total = selectedBase + kmCost;
+    var note = wantsAssemblyOrDisposal()
+      ? '<div class="price-box__note">zzgl. Montage/Verpackungsentsorgung nach Aufwand – die genaue Summe nennen wir Ihnen bei der Bestätigung.</div>'
+      : "";
     box.innerHTML =
       '<div class="price-box__label">Ihr MöbelTaxi</div>' +
       '<div class="price-box__amount">' + total.toFixed(2).replace(".", ",") + ' € <span>ca.</span></div>' +
-      '<div class="price-box__breakdown">Paket ' + selectedPkg + ' · Strecke ca. ' + lastResult.distanceKm.toFixed(1) + ' km</div>';
+      '<div class="price-box__breakdown">Paket ' + selectedPkg + ' · Strecke ca. ' + lastResult.distanceKm.toFixed(1) + ' km</div>' +
+      note;
   }
 
   function initBooking() {

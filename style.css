@@ -433,6 +433,8 @@ img { max-width: 100%; display: block; }
 .price-box__amount span { font-size: 18px; font-weight: 700; color: var(--muted); }
 .price-box__breakdown { color: var(--muted); font-size: 12.5px; margin-top: 6px; line-height: 1.6; }
 .price-box__placeholder { color: var(--muted); font-size: 14px; }
+.price-box__note { color: var(--muted); font-size: 12px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--line); line-height: 1.5; }
+.tw-fee-note { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 10px 0 0; }
 
 /* MöbelTaxi booking wizard */
 .tw-progress { display: flex; gap: 6px; margin-bottom: 12px; }
